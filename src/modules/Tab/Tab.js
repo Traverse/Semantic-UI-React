@@ -44,9 +44,9 @@ class Tab extends Component {
   ]
 
   componentWillMount() {
-    this.trySetState({
-      activeIndex: 0,
-    })
+    if (super.componentWillMount) super.componentWillMount()
+
+    this.trySetState({ activeIndex: 0 })
   }
 
   static Segment = TabSegment
@@ -57,8 +57,10 @@ class Tab extends Component {
   }
 
   handleItemClick = (e, { index }) => {
+    const { children } = this.props
+
     this.trySetState({ activeIndex: index })
-    this.onTabChange(e, this.items[index])
+    this.onTabChange(e, Children.toArray(children)[index])
   }
 
   renderMenu() {
@@ -81,11 +83,9 @@ class Tab extends Component {
     const { children } = this.props
     const { activeIndex } = this.state
 
-    return Children.map(children, (tabSegment, index) => {
-      const className = index === activeIndex ? 'active' : ''
-
-      return cloneElement(tabSegment, { className })
-    })
+    return Children.map(children, (tabSegment, index) =>
+      cloneElement(tabSegment, { active: index === activeIndex })
+    )
   }
 
   render() {

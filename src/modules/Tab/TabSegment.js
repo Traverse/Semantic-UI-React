@@ -10,10 +10,11 @@ import {
 } from '../../lib'
 
 function TabSegment(props) {
-  const { children, className, loading } = props
+  const { active, children, className, loading } = props
   const rest = getUnhandledProps(TabSegment, props)
   const classes = cx(
     'ui',
+    useKeyOnly(active, 'active'),
     useKeyOnly(loading, 'loading'),
     className,
     'tab'
@@ -32,6 +33,9 @@ TabSegment._meta = {
 TabSegment.propTypes = {
   /** An element type to render as (string or function). */
   as: customPropTypes.as,
+
+  /** Whether or not the modal is visible */
+  active: PropTypes.bool,
 
   /** Additional classes */
   className: PropTypes.string,

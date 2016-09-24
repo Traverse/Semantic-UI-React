@@ -3,5 +3,6 @@ import * as common from 'test/specs/commonTests'
 
 describe('TabSegment', () => {
   common.isConformant(TabSegment)
+  common.propKeyOnlyToClassName(TabSegment, 'active')
   common.propKeyOnlyToClassName(TabSegment, 'loading')
 })
