@@ -1,8 +1,8 @@
-import TabSegment from 'src/modules/Tab/TabSegment'
+import TabPane from 'src/modules/Tab/TabPane'
 import * as common from 'test/specs/commonTests'
 
-describe('TabSegment', () => {
-  common.isConformant(TabSegment)
-  common.propKeyOnlyToClassName(TabSegment, 'active')
-  common.propKeyOnlyToClassName(TabSegment, 'loading')
+describe('TabPane', () => {
+  common.isConformant(TabPane)
+  common.propKeyOnlyToClassName(TabPane, 'active')
+  common.propKeyOnlyToClassName(TabPane, 'loading')
 })

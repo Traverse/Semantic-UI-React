@@ -3,18 +3,18 @@ import sinon from 'sinon'
 import React from 'react'
 
 import Tab from 'src/modules/Tab/Tab'
-import TabSegment from 'src/modules/Tab/TabSegment'
+import TabPane from 'src/modules/Tab/TabPane'
 import * as common from 'test/specs/commonTests'
 import { sandbox } from 'test/utils'
 
 describe('Tab', () => {
   common.isConformant(Tab)
-  common.hasSubComponents(Tab, [TabSegment])
+  common.hasSubComponents(Tab, [TabPane])
 
   const tabs = [
-    <TabSegment menuItem='Tab 1'>Tab 1 Content</TabSegment>,
-    <TabSegment menuItem='Tab 2'>Tab 2 Content</TabSegment>,
-    <TabSegment menuItem='Tab 3'>Tab 3 Content</TabSegment>,
+    <TabPane menuItem='Tab 1'>Tab 1 Content</TabPane>,
+    <TabPane menuItem='Tab 2'>Tab 2 Content</TabPane>,
+    <TabPane menuItem='Tab 3'>Tab 3 Content</TabPane>,
   ]
 
   describe('activeIndex', () => {
@@ -27,7 +27,7 @@ describe('Tab', () => {
         .should.have.prop('activeIndex', 0)
 
       wrapper
-        .find('TabSegment')
+        .find('TabPane')
         .first()
         .should.have.prop('active', true)
     })
@@ -44,7 +44,7 @@ describe('Tab', () => {
         .should.have.prop('active', true)
 
       wrapper
-        .find('TabSegment')
+        .find('TabPane')
         .at(randomIndex)
         .should.have.prop('active', true)
     })
@@ -60,7 +60,7 @@ describe('Tab', () => {
         .should.have.prop('activeIndex', randomIndex)
 
       wrapper
-        .find('TabSegment')
+        .find('TabPane')
         .at(randomIndex)
         .should.have.prop('active', true)
     })
