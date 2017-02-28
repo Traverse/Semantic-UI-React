@@ -205,8 +205,6 @@ class Tab extends Component {
     else if (attached === 'bottom') calculatedProps.attached = 'top'
     else if (attached === true || attached === 'top') calculatedProps.attached = 'bottom'
 
-    console.log({ attached, pointing, secondary, vertical }, calculatedProps)
-
     return TabPane.create(props, calculatedProps)
   }
 
