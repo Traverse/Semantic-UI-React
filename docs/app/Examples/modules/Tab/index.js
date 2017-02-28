@@ -1,23 +1,14 @@
 import React from 'react'
-import ComponentExample from 'docs/app/Components/ComponentDoc/ComponentExample'
-import ExampleSection from 'docs/app/Components/ComponentDoc/ExampleSection'
+
+import Types from './Types'
+import States from './States'
+import MenuVariations from './MenuVariations'
 
 const TabExamples = () => (
   <div>
-    <ExampleSection title='Types'>
-      <ComponentExample
-        title='Basic'
-        description='A basic tab'
-        examplePath='modules/Tab/Types/Basic'
-      />
-    </ExampleSection>
-    <ExampleSection title='States'>
-      <ComponentExample
-        title='Loading'
-        description='A tab can display a loading indicator'
-        examplePath='modules/Tab/States/Loading'
-      />
-    </ExampleSection>
+    <Types />
+    <States />
+    <MenuVariations />
   </div>
 )
 
