@@ -189,10 +189,12 @@ class Tab extends Component {
   }
 
   renderPanes() {
-    const { attached, pointing, secondary, vertical } = this.props
+    const { attached } = this.props
     const { activeIndex } = this.state
 
     const props = this.paneProps[activeIndex]
+
+    // TODO defaultPaneProps
 
     const calculatedProps = {
       active: !_.isNil(props.active) ? props.active : true,
