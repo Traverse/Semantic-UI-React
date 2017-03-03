@@ -64,6 +64,10 @@ describe('Tab', () => {
         .at(randomIndex)
         .should.have.prop('active', true)
     })
+
+    it('can be overridden with `active` on an individual pane', () => {
+      // TODO
+    })
   })
 
   describe('onTabChange', () => {

@@ -6,7 +6,7 @@ const TabStatesExamples = () => (
   <ExampleSection title='States'>
     <ComponentExample
       title='Loading'
-      description='A tab can display a loading indicator'
+      description='A tab can display a loading indicator.'
       examplePath='modules/Tab/States/TabExampleLoading'
     />
   </ExampleSection>

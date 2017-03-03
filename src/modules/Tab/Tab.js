@@ -34,7 +34,10 @@ class Tab extends Component {
     defaultActiveIndex: PropTypes.number,
 
     /** Index of the currently active tab. */
-    activeIndex: PropTypes.number,
+    activeIndex: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+    ]),
 
     /**
      * Called on tab change.
@@ -42,9 +45,8 @@ class Tab extends Component {
      * @param {SyntheticEvent} event - React's original SyntheticEvent.
      * @param {object} data - The proposed new Tab.Pane.
      * @param {object} data.activeIndex - The new proposed activeIndex.
-     * @param {object} data.paneProps - Props of the new proposed active pane.
+     * @param {object} data.panes - Props of the new proposed active pane.
      */
-
     onChange: PropTypes.func,
 
     // ----------------------------------------
@@ -58,9 +60,6 @@ class Tab extends Component {
 
     /** Additional colors can be specified. */
     color: Menu.propTypes.color,
-
-    /** A vertical menu may take the size of its container. */
-    fluid: Menu.propTypes.fluid,
 
     /** A menu may have just icons (bool) or labeled icons. */
     icon: Menu.propTypes.icon,
@@ -77,20 +76,11 @@ class Tab extends Component {
     /** A menu can vary in size. */
     size: Menu.propTypes.size,
 
-    /** A menu can stack at mobile resolutions. */
-    stackable: Menu.propTypes.stackable,
-
     /** A menu can be formatted to show tabs of information. */
     tabular: Menu.propTypes.tabular,
 
     /** A menu can be formatted for text content. */
     text: Menu.propTypes.text,
-
-    /** A vertical menu displays elements vertically. */
-    vertical: Menu.propTypes.vertical,
-
-    /** A menu can have its items divided evenly. */
-    widths: Menu.propTypes.widths,
   }
 
   static defaultProps = {
@@ -104,41 +94,45 @@ class Tab extends Component {
 
   static Pane = TabPane
 
+  state = {
+    activeIndex: 0,
+  }
+
   componentWillMount() {
     if (super.componentWillMount) super.componentWillMount()
 
-    this.trySetState({ activeIndex: 0 })
     this.parsePanes(this.props)
   }
 
   componentWillReceiveProps(nextProps) {
-    this.parsePanes(nextProps)
-  }
+    if (super.componentWillReceiveProps) super.componentWillReceiveProps(nextProps)
 
-  onChange = (e, data) => {
-    const { onChange } = this.props
-    if (onChange) onChange(e, data)
+    this.parsePanes(nextProps)
   }
 
   handleItemClick = (e, { index }) => {
     this.trySetState({ activeIndex: index })
-    this.onChange(e, { activeIndex: index, paneProps: this.paneProps[index] })
+    _.invoke('onChange', this.props, [e, { activeIndex: index, panes: this.panes[index] }])
   }
 
   parsePanes = (props) => {
     const { children } = props
 
-    this.itemProps = []
-    this.paneProps = []
+    this.menuItems = []
+    this.panes = []
 
     Children.forEach(children, pane => {
-      const { menuItem, ...paneProps } = pane.props
-      this.itemProps.push(menuItem)
-      this.paneProps.push(paneProps)
+      if (pane.type !== TabPane) return
+
+      const { menuItem, ...panes } = pane.props
+      this.menuItems.push(menuItem)
+      this.panes.push(panes)
     })
   }
 
-  canAttach = () => {
+  getMenuProps = () => ({ attached: true, tabular: true, ...this.props.menu })
+
+  shouldMenuAttach = () => {
     const { pointing, secondary, text, vertical } = this.props
 
     return !secondary && !pointing && !text && !vertical
@@ -149,39 +143,31 @@ class Tab extends Component {
       attached,
       borderless,
       color,
-      fluid,
       icon,
       inverted,
       pointing,
       secondary,
       size,
-      stackable,
       tabular,
       text,
-      vertical,
-      widths,
     } = this.props
     const { activeIndex } = this.state
 
-    const canAttach = this.canAttach()
+    const shouldAttach = this.shouldMenuAttach()
 
     return (
       <Menu
-        attached={canAttach && attached}
+        attached={shouldAttach && attached}
         borderless={borderless}
         color={color}
-        fluid={fluid}
         icon={icon}
         inverted={inverted}
         pointing={pointing}
         secondary={secondary}
         size={size}
-        stackable={stackable}
-        tabular={canAttach && tabular}
+        tabular={shouldAttach && tabular}
         text={text}
-        vertical={vertical}
-        widths={widths}
-        items={this.itemProps}
+        items={this.menuItems}
         onItemClick={this.handleItemClick}
         activeIndex={activeIndex}
       />
@@ -192,22 +178,20 @@ class Tab extends Component {
     const { attached } = this.props
     const { activeIndex } = this.state
 
-    const props = this.paneProps[activeIndex]
+    const pane = this.panes[activeIndex]
 
-    // TODO defaultPaneProps
-
-    const calculatedProps = {
-      active: !_.isNil(props.active) ? props.active : true,
+    const defaultProps = {
+      active: !_.isNil(pane.active) ? pane.active : true,
     }
 
     // attach segment to opposite side of menu
     // check for `true` last, it is the default value so likely to be present
     // otherwise, the calculated attached is always 'bottom' unless `false` is passed
-    if (!this.canAttach()) calculatedProps.attached = false
-    else if (attached === 'bottom') calculatedProps.attached = 'top'
-    else if (attached === true || attached === 'top') calculatedProps.attached = 'bottom'
+    if (!this.shouldMenuAttach()) defaultProps.attached = false
+    else if (attached === 'bottom') defaultProps.attached = 'top'
+    else if (attached === true || attached === 'top') defaultProps.attached = 'bottom'
 
-    return TabPane.create(props, calculatedProps)
+    return TabPane.create(pane, defaultProps)
   }
 
   render() {

@@ -2,6 +2,7 @@ import React from 'react'
 
 import Types from './Types'
 import States from './States'
+import Usage from './Usage'
 import MenuVariations from './MenuVariations'
 
 const TabExamples = () => (
@@ -9,6 +10,7 @@ const TabExamples = () => (
     <Types />
     <States />
     <MenuVariations />
+    <Usage />
   </div>
 )
 

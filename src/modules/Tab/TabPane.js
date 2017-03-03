@@ -17,9 +17,34 @@ import Segment from '../../elements/Segment/Segment'
  * @see Segment
  */
 function TabPane(props) {
-  const { active, attached, children, className, loading } = props
+  const {
+    // Tab props
+    active,
+    children,
+    className,
+    loading,
+
+    // Segment props
+    attached,
+    basic,
+    circular,
+    clearing,
+    color,
+    compact,
+    disabled,
+    floated,
+    inverted,
+    padded,
+    piled,
+    raised,
+    secondary,
+    size,
+    stacked,
+    tertiary,
+    textAlign,
+    vertical,
+  } = props
   const rest = getUnhandledProps(TabPane, props)
-  const ElementType = getElementType(TabPane, props)
   const classes = cx(
     'ui',
     useKeyOnly(active, 'active'),
@@ -29,19 +54,37 @@ function TabPane(props) {
   )
 
   return (
-    <ElementType
+    <Segment
       {...rest}
-      // TODO: port all Segment props that can make sense for tab panes
+      // Tab props
+      active={active}
+      children={children}
       className={classes}
+      loading={loading}
+
+      // Segment props
       attached={attached}
+      basic={basic}
+      circular={circular}
+      clearing={clearing}
+      color={color}
+      compact={compact}
+      disabled={disabled}
+      floated={floated}
+      inverted={inverted}
+      padded={padded}
+      piled={piled}
+      raised={raised}
+      secondary={secondary}
+      size={size}
+      stacked={stacked}
+      tertiary={tertiary}
+      textAlign={textAlign}
+      vertical={vertical}
     >
       {children}
-    </ElementType>
+    </Segment>
   )
-}
-
-TabPane.defaultProps = {
-  as: Segment,
 }
 
 TabPane._meta = {
