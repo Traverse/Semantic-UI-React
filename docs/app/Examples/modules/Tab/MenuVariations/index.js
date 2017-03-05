@@ -35,6 +35,10 @@ const TabMenuVariationsExamples = () => (
         content='Color only applies to the menu, not the pane, so they look best not attached.'
       />
     </ComponentExample>
+    <ComponentExample
+      description='A tab menu can invert its colors.'
+      examplePath='modules/Tab/MenuVariations/TabExampleColoredInverted'
+    />
   </ExampleSection>
 )
 
