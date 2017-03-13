@@ -130,12 +130,10 @@ class Tab extends Component {
     })
   }
 
-  getMenuProps = () => ({ attached: true, tabular: true, ...this.props.menu })
-
   shouldMenuAttach = () => {
-    const { pointing, secondary, text, vertical } = this.props
+    const { pointing, secondary, text } = this.props
 
-    return !secondary && !pointing && !text && !vertical
+    return !secondary && !pointing && !text
   }
 
   renderMenu() {

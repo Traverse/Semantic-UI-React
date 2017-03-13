@@ -4,7 +4,6 @@ import React, { PropTypes } from 'react'
 import {
   createShorthandFactory,
   customPropTypes,
-  getElementType,
   getUnhandledProps,
   META,
   useKeyOnly,
