@@ -6,6 +6,7 @@ import React from 'react'
 import {
   AutoControlledComponent as Component,
   customPropTypes,
+  createShorthandFactory,
   getElementType,
   getUnhandledProps,
   META,
@@ -214,5 +215,7 @@ class Menu extends Component {
     )
   }
 }
+
+Menu.create = createShorthandFactory(Menu, items => ({ items }))
 
 export default Menu

@@ -8,9 +8,9 @@ import MenuVariations from './MenuVariations'
 const TabExamples = () => (
   <div>
     <Types />
-    <States />
-    <MenuVariations />
-    <Usage />
+    {/*<States />*/}
+    {/*<MenuVariations />*/}
+    {/*<Usage />*/}
   </div>
 )
 

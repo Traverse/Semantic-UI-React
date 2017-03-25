@@ -1,5 +1,6 @@
 import _ from 'lodash/fp'
-import React, { Children, PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 
 import {
   AutoControlledComponent as Component,
@@ -27,9 +28,6 @@ class Tab extends Component {
     /** An element type to render as (string or function). */
     as: customPropTypes.as,
 
-    /** One or more Tab.Pane components. */
-    children: PropTypes.node,
-
     /** The initial activeIndex. */
     defaultActiveIndex: PropTypes.number,
 
@@ -49,48 +47,23 @@ class Tab extends Component {
      */
     onChange: PropTypes.func,
 
-    // ----------------------------------------
-    // Menu Props
+    /** Shorthand props for the Menu. */
+    menu: customPropTypes.contentShorthand,
 
-    /** The Tab menu may appear attached to the Tab.Panes. */
-    attached: Menu.propTypes.attached,
-
-    /** A menu item or menu can have no borders. */
-    borderless: Menu.propTypes.borderless,
-
-    /** Additional colors can be specified. */
-    color: Menu.propTypes.color,
-
-    /** A menu may have just icons (bool) or labeled icons. */
-    icon: Menu.propTypes.icon,
-
-    /** A menu may have its colors inverted to show greater contrast. */
-    inverted: Menu.propTypes.inverted,
-
-    /** A menu can point to show its relationship to nearby content. */
-    pointing: Menu.propTypes.pointing,
-
-    /** A menu can adjust its appearance to de-emphasize its contents. */
-    secondary: Menu.propTypes.secondary,
-
-    /** A menu can vary in size. */
-    size: Menu.propTypes.size,
-
-    /** A menu can be formatted to show tabs of information. */
-    tabular: Menu.propTypes.tabular,
-
-    /** A menu can be formatted for text content. */
-    text: Menu.propTypes.text,
-  }
-
-  static defaultProps = {
-    attached: true,
-    tabular: true,
+    /** Shorthand props for the Menu. */
+    panes: PropTypes.arrayOf(PropTypes.shape({
+      menuItem: PropTypes.string.isRequired,
+      render: PropTypes.func.isRequired,
+    })),
   }
 
   static autoControlledProps = [
     'activeIndex',
   ]
+
+  static defaultProps = {
+    menu: { attached: true, tabular: true },
+  }
 
   static Pane = TabPane
 
@@ -98,111 +71,37 @@ class Tab extends Component {
     activeIndex: 0,
   }
 
-  componentWillMount() {
-    if (super.componentWillMount) super.componentWillMount()
-
-    this.parsePanes(this.props)
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (super.componentWillReceiveProps) super.componentWillReceiveProps(nextProps)
-
-    this.parsePanes(nextProps)
-  }
-
   handleItemClick = (e, { index }) => {
+    _.invoke('onChange', this.props, e, { activeIndex: index, ...this.props })
     this.trySetState({ activeIndex: index })
-    _.invoke('onChange', this.props, [e, { activeIndex: index, panes: this.panes[index] }])
-  }
-
-  parsePanes = (props) => {
-    const { children } = props
-
-    this.menuItems = []
-    this.panes = []
-
-    Children.forEach(children, pane => {
-      if (pane.type !== TabPane) return
-
-      const { menuItem, ...panes } = pane.props
-      this.menuItems.push(menuItem)
-      this.panes.push(panes)
-    })
-  }
-
-  shouldMenuAttach = () => {
-    const { pointing, secondary, text } = this.props
-
-    return !secondary && !pointing && !text
   }
 
   renderMenu() {
-    const {
-      attached,
-      borderless,
-      color,
-      icon,
-      inverted,
-      pointing,
-      secondary,
-      size,
-      tabular,
-      text,
-    } = this.props
+    const { menu, panes } = this.props
     const { activeIndex } = this.state
 
-    const shouldAttach = this.shouldMenuAttach()
-
-    return (
-      <Menu
-        attached={shouldAttach && attached}
-        borderless={borderless}
-        color={color}
-        icon={icon}
-        inverted={inverted}
-        pointing={pointing}
-        secondary={secondary}
-        size={size}
-        tabular={shouldAttach && tabular}
-        text={text}
-        items={this.menuItems}
-        onItemClick={this.handleItemClick}
-        activeIndex={activeIndex}
-      />
-    )
-  }
-
-  renderPanes() {
-    const { attached } = this.props
-    const { activeIndex } = this.state
-
-    const pane = this.panes[activeIndex]
-
-    const defaultProps = {
-      active: !_.isNil(pane.active) ? pane.active : true,
-    }
-
-    // attach segment to opposite side of menu
-    // check for `true` last, it is the default value so likely to be present
-    // otherwise, the calculated attached is always 'bottom' unless `false` is passed
-    if (!this.shouldMenuAttach()) defaultProps.attached = false
-    else if (attached === 'bottom') defaultProps.attached = 'top'
-    else if (attached === true || attached === 'top') defaultProps.attached = 'bottom'
-
-    return TabPane.create(pane, defaultProps)
+    return Menu.create(menu, {
+      overrideProps: {
+        items: _.map('menuItem', panes),
+        onItemClick: this.handleItemClick,
+        activeIndex,
+      },
+    })
   }
 
   render() {
-    const { attached } = this.props
+    const { panes } = this.props
+    const { activeIndex } = this.state
 
+    const menu = this.renderMenu()
     const rest = getUnhandledProps(Tab, this.props)
     const ElementType = getElementType(Tab, this.props)
 
     return (
       <ElementType {...rest}>
-        {attached !== 'bottom' && this.renderMenu()}
-        {this.renderPanes()}
-        {attached === 'bottom' && this.renderMenu()}
+        {menu.props.attached !== 'bottom' && menu}
+        {_.invoke('render', panes[activeIndex], this.props)}
+        {menu.props.attached === 'bottom' && menu}
       </ElementType>
     )
   }
