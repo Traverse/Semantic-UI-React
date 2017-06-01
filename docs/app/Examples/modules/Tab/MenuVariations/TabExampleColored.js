@@ -7,6 +7,12 @@ const colors = [
   'blue', 'violet', 'purple', 'pink', 'brown', 'grey',
 ]
 
+const panes = [
+  { menuItem: 'Tab 1', render: () => <Tab.Pane attached={false}>Tab 1 Content</Tab.Pane> },
+  { menuItem: 'Tab 2', render: () => <Tab.Pane attached={false}>Tab 2 Content</Tab.Pane> },
+  { menuItem: 'Tab 3', render: () => <Tab.Pane attached={false}>Tab 3 Content</Tab.Pane> },
+]
+
 class TabExampleColored extends Component {
   state = { color: colors[0] }
 
@@ -23,11 +29,10 @@ class TabExampleColored extends Component {
 
         <Divider hidden />
 
-        <Tab color={color} tabular={false} attached={false}>
-          <Tab.Pane menuItem='Tab 1'>Tab 1 Content</Tab.Pane>
-          <Tab.Pane menuItem='Tab 2'>Tab 2 Content</Tab.Pane>
-          <Tab.Pane menuItem='Tab 3'>Tab 3 Content</Tab.Pane>
-        </Tab>
+        <Tab
+          menu={{ color, attached: false, tabular: false }}
+          panes={panes}
+        />
       </div>
     )
   }

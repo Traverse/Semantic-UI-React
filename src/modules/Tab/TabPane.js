@@ -74,6 +74,6 @@ TabPane.propTypes = {
   loading: PropTypes.bool,
 }
 
-TabPane.create = createShorthandFactory(TabPane, children => ({ children }), true)
+TabPane.create = createShorthandFactory(TabPane, children => ({ children }))
 
 export default TabPane
