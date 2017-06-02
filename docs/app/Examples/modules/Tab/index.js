@@ -10,7 +10,7 @@ const TabExamples = () => (
     <Types />
     <States />
     <MenuVariations />
-    {/*<Usage />*/}
+    {/* <Usage />*/}
   </div>
 )
 

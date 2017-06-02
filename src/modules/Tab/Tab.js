@@ -1,6 +1,6 @@
 import _ from 'lodash/fp'
-import React from 'react'
 import PropTypes from 'prop-types'
+import React from 'react'
 
 import {
   AutoControlledComponent as Component,
@@ -9,7 +9,6 @@ import {
   getUnhandledProps,
   META,
 } from '../../lib'
-
 import Menu from '../../collections/Menu/Menu'
 import TabPane from './TabPane'
 
@@ -19,23 +18,24 @@ import TabPane from './TabPane'
  * @see Segment
  */
 class Tab extends Component {
-  static _meta = {
-    name: 'Tab',
-    type: META.TYPES.MODULE,
-  }
-
   static propTypes = {
     /** An element type to render as (string or function). */
     as: customPropTypes.as,
 
     /** The initial activeIndex. */
-    defaultActiveIndex: PropTypes.number,
+    defaultActiveIndex: PropTypes.oneOfType([
+      PropTypes.number,
+      PropTypes.string,
+    ]),
 
     /** Index of the currently active tab. */
     activeIndex: PropTypes.oneOfType([
       PropTypes.number,
       PropTypes.string,
     ]),
+
+    /** Shorthand props for the Menu. */
+    menu: customPropTypes.contentShorthand,
 
     /**
      * Called on tab change.
@@ -46,9 +46,6 @@ class Tab extends Component {
      * @param {object} data.panes - Props of the new proposed active pane.
      */
     onChange: PropTypes.func,
-
-    /** Shorthand props for the Menu. */
-    menu: customPropTypes.contentShorthand,
 
     /** Shorthand props for the Menu. */
     panes: PropTypes.arrayOf(PropTypes.shape({
@@ -63,6 +60,11 @@ class Tab extends Component {
 
   static defaultProps = {
     menu: { attached: true, tabular: true },
+  }
+
+  static _meta = {
+    name: 'Tab',
+    type: META.TYPES.MODULE,
   }
 
   static Pane = TabPane
